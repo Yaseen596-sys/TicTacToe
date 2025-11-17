@@ -1,9 +1,9 @@
 """
 Tic-Tac-Toe project.
 
-Step 3:
-- Allow two players to place X and O on the board.
-- Simple input validation for position.
+Step 4:
+- Add winner and draw detection.
+- Play until someone wins or the board is full.
 """
 
 PLAYER_X = "X"
@@ -28,10 +28,7 @@ def print_board(board):
 
 
 def get_player_move(board, current_player):
-    """
-    Ask current player for a move.
-    Very basic validation: must be 1–9 and empty.
-    """
+    """Ask current player for a valid move (1–9, not occupied)."""
     while True:
         choice = input(f"Player {current_player}, choose a position (1-9): ").strip()
 
@@ -52,21 +49,52 @@ def get_player_move(board, current_player):
         return index
 
 
+def check_winner(board):
+    """
+    Check the board for a winner or a draw.
+    Returns "X", "O", "draw", or None.
+    """
+    winning_combinations = [
+        (0, 1, 2),
+        (3, 4, 5),
+        (6, 7, 8),
+        (0, 3, 6),
+        (1, 4, 7),
+        (2, 5, 8),
+        (0, 4, 8),
+        (2, 4, 6),
+    ]
+
+    for a, b, c in winning_combinations:
+        if board[a] != EMPTY and board[a] == board[b] == board[c]:
+            return board[a]
+
+    if EMPTY not in board:
+        return "draw"
+
+    return None
+
+
 def main():
-    """Entry point for the Tic-Tac-Toe program."""
+    """Run a single game of Tic-Tac-Toe."""
     print("Welcome to Tic-Tac-Toe!")
     board = create_board()
     current_player = PLAYER_X
+    result = None
 
-    # Let players make a few moves (not full game yet)
-    for _ in range(5):
+    while result is None:
         print_board(board)
         index = get_player_move(board, current_player)
         board[index] = current_player
-        current_player = PLAYER_O if current_player == PLAYER_X else PLAYER_X
+        result = check_winner(board)
+        if result is None:
+            current_player = PLAYER_O if current_player == PLAYER_X else PLAYER_X
 
     print_board(board)
-    print("Demo complete – full game logic will be added later.")
+    if result == "draw":
+        print("It's a draw!")
+    else:
+        print(f"Player {result} wins!")
 
 
 if __name__ == "__main__":
