@@ -1,9 +1,11 @@
 """
-Tic-Tac-Toe project.
+Simple terminal-based Tic-Tac-Toe game.
 
-Step 6:
-- Improve input handling (replay and moves).
-- Add clearer instructions for players.
+Features:
+- Two-player game (X and O).
+- Input validation (only accepts free positions 1–9).
+- Replay option without restarting the program.
+- Score tracking across multiple rounds.
 """
 
 PLAYER_X = "X"
@@ -17,7 +19,12 @@ def create_board():
 
 
 def print_board(board):
-    """Print the current board in a user-friendly 3x3 layout with position hints."""
+    """
+    Print the current board in a 3x3 layout.
+
+    Empty cells show their position number (1–9) so players know
+    what to type for their move.
+    """
     display = []
     for i, cell in enumerate(board):
         if cell == EMPTY:
@@ -35,7 +42,12 @@ def print_board(board):
 
 
 def get_player_move(board, current_player):
-    """Ask current player for a valid move (1–9, not occupied)."""
+    """
+    Ask current player for a valid move (1–9, not occupied).
+
+    Returns:
+        int: index on the board (0–8).
+    """
     while True:
         choice = input(f"Player {current_player}, choose a position (1-9): ").strip()
 
@@ -57,7 +69,15 @@ def get_player_move(board, current_player):
 
 
 def check_winner(board):
-    """Check the board for a winner or a draw."""
+    """
+    Check the board for a winner or a draw.
+
+    Returns:
+        "X" if player X wins,
+        "O" if player O wins,
+        "draw" if no spaces left and no winner,
+        None if the game should continue.
+    """
     winning_combinations = [
         (0, 1, 2),
         (3, 4, 5),
@@ -80,7 +100,12 @@ def check_winner(board):
 
 
 def play_single_game():
-    """Play one complete game and return the result: 'X', 'O', or 'draw'."""
+    """
+    Play one complete game of Tic-Tac-Toe.
+
+    Returns:
+        str: "X", "O", or "draw" based on the result.
+    """
     board = create_board()
     current_player = PLAYER_X
     result = None
@@ -107,7 +132,7 @@ def play_single_game():
 
 
 def ask_play_again():
-    """Ask the players if they want to play again. Return True/False."""
+    """Ask the players if they want to play again. Return True if yes, else False."""
     while True:
         answer = input("Play again? (y/n): ").strip().lower()
         if answer in ("y", "yes"):
@@ -118,9 +143,14 @@ def ask_play_again():
 
 
 def main():
-    """Main loop to play multiple games and track scores."""
+    """
+    Main loop for the Tic-Tac-Toe project.
+
+    Keeps playing games until users choose to stop,
+    and tracks total scores for both players and draws.
+    """
     print("Welcome to Tic-Tac-Toe!")
-    print("This is a simple two-player game in the terminal.\n")
+    print("Two players take turns placing X and O on a 3x3 board.\n")
 
     scores = {PLAYER_X: 0, PLAYER_O: 0, "draw": 0}
 
