@@ -1,9 +1,9 @@
 """
 Tic-Tac-Toe project.
 
-Step 5:
-- Add replay option.
-- Track scores for X, O, and draws across multiple games.
+Step 6:
+- Improve input handling (replay and moves).
+- Add clearer instructions for players.
 """
 
 PLAYER_X = "X"
@@ -17,13 +17,20 @@ def create_board():
 
 
 def print_board(board):
-    """Print the current board in a user-friendly 3x3 layout."""
+    """Print the current board in a user-friendly 3x3 layout with position hints."""
+    display = []
+    for i, cell in enumerate(board):
+        if cell == EMPTY:
+            display.append(str(i + 1))
+        else:
+            display.append(cell)
+
     print()
-    print(f" {board[0]} | {board[1]} | {board[2]} ")
+    print(f" {display[0]} | {display[1]} | {display[2]} ")
     print("---+---+---")
-    print(f" {board[3]} | {board[4]} | {board[5]} ")
+    print(f" {display[3]} | {display[4]} | {display[5]} ")
     print("---+---+---")
-    print(f" {board[6]} | {board[7]} | {board[8]} ")
+    print(f" {display[6]} | {display[7]} | {display[8]} ")
     print()
 
 
@@ -33,7 +40,7 @@ def get_player_move(board, current_player):
         choice = input(f"Player {current_player}, choose a position (1-9): ").strip()
 
         if not choice.isdigit():
-            print("Please enter a number between 1 and 9.")
+            print("Invalid input. Please enter a number between 1 and 9.")
             continue
 
         pos = int(choice)
@@ -43,7 +50,7 @@ def get_player_move(board, current_player):
 
         index = pos - 1
         if board[index] != EMPTY:
-            print("That position is already taken.")
+            print("That position is already taken. Please choose another.")
             continue
 
         return index
@@ -78,17 +85,19 @@ def play_single_game():
     current_player = PLAYER_X
     result = None
 
-    print("\nNew game started! Player X goes first.")
+    print("\nNew game started!")
+    print("Player X goes first.")
+    print("Enter a number (1-9) to place your mark in that position.")
+    print_board(board)
 
     while result is None:
-        print_board(board)
         index = get_player_move(board, current_player)
         board[index] = current_player
+        print_board(board)
         result = check_winner(board)
         if result is None:
             current_player = PLAYER_O if current_player == PLAYER_X else PLAYER_X
 
-    print_board(board)
     if result == "draw":
         print("It's a draw!")
     else:
@@ -97,9 +106,22 @@ def play_single_game():
     return result
 
 
+def ask_play_again():
+    """Ask the players if they want to play again. Return True/False."""
+    while True:
+        answer = input("Play again? (y/n): ").strip().lower()
+        if answer in ("y", "yes"):
+            return True
+        if answer in ("n", "no"):
+            return False
+        print("Please answer with 'y' or 'n'.")
+
+
 def main():
     """Main loop to play multiple games and track scores."""
     print("Welcome to Tic-Tac-Toe!")
+    print("This is a simple two-player game in the terminal.\n")
+
     scores = {PLAYER_X: 0, PLAYER_O: 0, "draw": 0}
 
     while True:
@@ -110,10 +132,9 @@ def main():
         print("\nCurrent scores:")
         print(f"  Player X: {scores[PLAYER_X]}")
         print(f"  Player O: {scores[PLAYER_O]}")
-        print(f"  Draws   : {scores['draw']}")
+        print(f"  Draws   : {scores['draw']}\n")
 
-        again = input("\nPlay again? (y/n): ").strip().lower()
-        if again != "y":
+        if not ask_play_again():
             print("Thanks for playing Tic-Tac-Toe!")
             break
 
